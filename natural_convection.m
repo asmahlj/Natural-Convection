@@ -9,7 +9,7 @@ function h = natural_convection(D, Ts, T_inf)
     
     % Constants
     g = 9.81;  % Gravitational acceleration (m/s^2)
-    beta = 2 / (Ts + T_inf + 273.15);  % Coefficient of thermal expansion (1/K)
+    beta =1 / ((Ts + T_inf)/2 + 273);  % Coefficient of thermal expansion (1/K)
     % k Thermal conductivity of air (W/m*K)
     
     % Temperature difference
