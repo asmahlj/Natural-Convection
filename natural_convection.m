@@ -5,11 +5,11 @@ function h = natural_convection(D, Ts, T_inf)
     % T_inf - Surrounding air temperature (°C)
     % v - Kinematic viscosity (m^2/s)
     
-  [nu, k, Pr] = AirProperties(T_inf,   [], [],  'nu', 'k', 'Pr');
+  [nu, k, Pr] = AirProperties((T_inf+Ts)/2,   [], [],  'nu', 'k', 'Pr');
     
     % Constants
     g = 9.81;  % Gravitational acceleration (m/s^2)
-    beta = 1 / (Ts + T_inf + 273.15);  % Coefficient of thermal expansion (1/K)
+    beta = 2 / (Ts + T_inf + 273.15);  % Coefficient of thermal expansion (1/K)
     % k Thermal conductivity of air (W/m*K)
     
     % Temperature difference
