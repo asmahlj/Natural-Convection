@@ -24,8 +24,14 @@ function h = natural_convection2(A,p, Ts, T_inf)
     L_horiz = A/p;  
     
     Ra_horiz_up = g * beta * deltaT * L_horiz^3 / (nu^2) * Pr;
+    if 10000 <= Ra_horiz_up<= 10^7
     Nu_horizontal_up = 0.54 * Ra_horiz_up^(1/4);
     h_horizontal_up = Nu_horizontal_up * k / L_horiz;
+    end
+    if 10^7 < Ra_horiz_up<= 10^11
+    Nu_horizontal_up = 0.15 * Ra_horiz_up^(1/3);
+    h_horizontal_up = Nu_horizontal_up * k / L_horiz;
+    end 
     
     % Horizontal plate with hot surface facing down
     Nu_horizontal_down = 0.27 * Ra_horiz_up^(1/4);
