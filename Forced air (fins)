@@ -1,0 +1,48 @@
+function R = Resistance(V, l, lf, N, S, K, t, Ts, T_inf)
+
+    % Get air properties based on the average temperature
+    [nu, k, Pr, rho] = AirProperties((T_inf + Ts)/2, [], [], 'nu', 'k', 'Pr', 'rho');
+    
+    % Reynolds number calculation (fixed multiplication)
+    Re = V * l / nu;
+
+     % Calculate hydraulic diameter for the finned channel
+    D_h = 4 * N * S  * lf / (N * (2 * l + S-t)); % example for rectangular fins
+    
+    f = 0.0791 * Re^(-0.25); % Blasius correlation
+
+    % Nusselt number based on Reynolds number
+    if Re >= 4000
+        Nu = 0.0296 * Re^(0.8) * Pr^(1/3);
+    elseif Re < 4000
+        Nu = 0.332 * Re^(0.5) * Pr^(1/3);
+    end
+    
+    % Heat transfer coefficient
+    h = Nu * k / l;
+
+    % Characteristic length
+    Lc = lf + t / 2;
+
+    % Areas and other calculations
+    Af = 2 * Lc * l;
+    At = N * Af + (N - 1) * S * l;
+
+    % Fin efficiency
+    m = sqrt(2 * h / (K * t));  % Fixed square root and m definition
+    nf = tanh(m * Lc) / (m * Lc);
+
+    % Total thermal resistance
+    Rto = 1 / (h * At * (1 - N * Af / At * (1 - nf)));
+
+    % Output resistance
+    R = Rto;
+    
+    deltaP = f * (l / D_h) * (rho * V^2 / 2);
+     
+    % Display results
+    fprintf('h = %.3f W/m^2K\n', h);
+    fprintf('R = %.3f K/W\n', Rto);
+    fprintf('Pressure drop: %.3f Pa\n', deltaP);
+
+end
