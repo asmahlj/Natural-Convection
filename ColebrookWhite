@@ -1,0 +1,11 @@
+function f = ColebrookWhite(Re, D_h, roughness)
+    % Solving the Colebrook-White equation iteratively
+    tol = 1e-6; % tolerance for iteration
+    f = 0.02; % initial guess
+    error = 1;
+    
+    while error > tol
+        f_old = f;
+        f = 1 / (-2 * log10((roughness / (3.7 * D_h)) + (2.51 / (Re * sqrt(f_old)))))^2;
+        error = abs(f - f_old);
+    end
