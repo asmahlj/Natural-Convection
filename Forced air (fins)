@@ -1,15 +1,18 @@
-function R = Resistance(V, l, lf, N, S, K, t, Ts, T_inf)
+function R = Resistance(V, l, lf, N, S, K, t, Ts, T_inf,roughness)
 
     % Get air properties based on the average temperature
     [nu, k, Pr, rho] = AirProperties((T_inf + Ts)/2, [], [], 'nu', 'k', 'Pr', 'rho');
     
     % Reynolds number calculation (fixed multiplication)
     Re = V * l / nu;
-
-     % Calculate hydraulic diameter for the finned channel
-    D_h = 4 * N * S  * lf / (N * (2 * l + S-t)); % example for rectangular fins
     
-    f = 0.0791 * Re^(-0.25); % Blasius correlation
+     % Calculate hydraulic diameter for the finned channel
+    D_h = 4 * (S) * lf / ( l + lf); % example for rectangular fins
+  
+%      f = 0.0791 * Re^(-0.25); % Blasius correlation
+
+ [f] = ColebrookWhite(Re, D_h, roughness);
+%  [f] = PetukhovFrictionFactor(Re);
 
     % Nusselt number based on Reynolds number
     if Re >= 4000
