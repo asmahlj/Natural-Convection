@@ -1,0 +1,36 @@
+function [S_opt, N_opt, t_opt] = OptimizeResistanceAndVolume(V, l, lf, K, Ts, T_inf, roughness, R_target)
+
+    % Bounds for S, N, and t
+    S_min = 0.001;   % Lower bound for spacing between fins
+    S_max = 0.1;     % Upper bound for S
+    N_min = 1;       % Minimum number of fins
+    N_max = 1000;    % Maximum number of fins
+    t_min = 0.001;   % Lower bound for fin thickness
+    t_max = 0.1;     % Upper bound for fin thickness
+
+    % Get air properties based on the average temperature
+    [nu, k, Pr, rho] = AirProperties((T_inf + Ts) / 2, [], [], 'nu', 'k', 'Pr', 'rho');
+
+    % Reynolds number calculation
+    Re = V * l / nu;
+
+    % Objective function to minimize both resistance and volume
+    objFun = @(x) CalculateCombinedObjective(x, V, l, lf, K, Ts, T_inf, roughness, k, Pr, rho, Re, R_target);
+
+    % Initial guess [S, N, t]
+    x0 = [0.0035, 40, 0.001]; % Initial guesses for S, N, and t
+
+    % Bounds for S, N, and t
+    lb = [S_min, N_min, t_min];
+    ub = [S_max, N_max, t_max];
+
+    % Use fmincon to minimize the combined objective
+    options = optimoptions('fmincon', 'Display', 'iter');
+    [x_opt, ~] = fmincon(objFun, x0, [], [], [], [], lb, ub, [], options);
+
+    % Extract optimized values for S, N, and t
+    S_opt = x_opt(1);
+    N_opt = x_opt(2);
+    t_opt = x_opt(3);
+
+end
