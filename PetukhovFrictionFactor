@@ -1,0 +1,9 @@
+function f = PetukhovFrictionFactor(Re)
+    % Check if Re is in turbulent range
+    if Re < 4000
+        error('Reynolds number should be > 4000 for turbulent flow.');
+    end
+    
+    % Calculate friction factor
+    f = (0.79 * log(Re) - 1.64)^(-2);
+end
